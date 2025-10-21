@@ -107,25 +107,25 @@ app/
 
 ```mermaid
 flowchart LR
-    A["MainActivity (Compose host)"]
-    B["WeatherViewModel · state: WeatherState"]
+    A["MainActivity - Compose host"]
+    B["WeatherViewModel - state WeatherState"]
     C["WeatherRepository (interface)"]
-    D["WeatherRepositoryImpl · Retrofit + Mappers"]
-    E["WeatherApi (Open-Meteo)"]
-    F["LocationTracker (FusedLocationProvider)"]
-    G["UI · WeatherCard + WeatherForecast"]
+    D["WeatherRepositoryImpl - Retrofit + Mappers"]
+    E["WeatherApi - Open-Meteo"]
+    F["LocationTracker - FusedLocationProvider"]
+    G["UI - WeatherCard + WeatherForecast"]
 
     A -->|collect state| B
     A -->|request permissions| F
     F -->|location| B
-    B -->|loadWeatherInfo()| C
-    C --> D
-    D -->|getWeather()| E
+    B -->|loadWeatherInfo| C
+    C -->|call| D
+    D -->|getWeather| E
     E -->|DTOs| D
     D -->|WeatherInfo| C
-    C -->|Resource.Success/Error| B
+    C -->|Resource| B
     B -->|render| A
-    A -->|Compose| G
+    A -->|compose| G
 ```
 
 > GitHub Mermaid-friendly: each edge and label is on its own line to avoid parser errors.
@@ -164,3 +164,4 @@ Runtime flow uses `ActivityResultContracts.RequestMultiplePermissions` from `Mai
 
 - Time parsing uses `java.time` (`LocalDateTime`, `DateTimeFormatter`).
 - The mapping `WeatherType.fromWMO(code)` provides a single source of truth for icons and text.
+- Location resolution uses `lastLocation`; you can extend to `getCurrentLocation()` updates if needed.
